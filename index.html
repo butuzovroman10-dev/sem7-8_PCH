@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Семинар 7-8: Расчёт метрик ООП | IT-Company</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin: 20px 0 10px 0;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+
+        .code-block .keyword { color: #569cd6; }
+        .code-block .type { color: #4ec9b0; }
+        .code-block .string { color: #ce9178; }
+        .code-block .comment { color: #6a9955; }
+        .code-block .function { color: #dcdcaa; }
+        .code-block .number { color: #b5cea8; }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f1f1f1;
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        .good {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .warning {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .bad {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .structure {
+            background: #2d2d2d;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .code-block {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📊 Расчёт метрик ООП</h1>
+        <p>Семинар 7-8 | Предметная область: IT-Company</p>
+        <p>Метрики Чидамбера-Кемерера (CK) | Метрики Абреу (MOOD) | Метрики Лоренца-Кидда</p>
+        <div class="badge">WMC | DIT | NOC | CBO | RFC | LCOM | MIF | AHF | POF | COF | MHF | CHF</div>
+    </div>
+
+    <div class="content">
+        <!-- ============================================ -->
+        <!-- ЦЕЛЬ РАБОТЫ -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>🎯 Цель работы</h2>
+            <p>Выполнить расчёт метрик объектно-ориентированного проектирования для предметной области IT-Company, проанализировать полученные значения, выявить потенциальные проблемы в архитектуре и сформулировать рекомендации по рефакторингу.</p>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- СТРУКТУРА ПРОЕКТА -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>📁 Структура проекта</h2>
+            <div class="structure">
+                sem7_pcs/<br>
+                ├── IWorkable.h              # Абстрактный интерфейс<br>
+                ├── Employee.h               # Базовый класс сотрудника<br>
+                ├── Developer.h              # Разработчик<br>
+                ├── Manager.h                # Менеджер<br>
+                ├── Tester.h                 # Тестировщик<br>
+                ├── MyContainer.h            # Шаблонная коллекция (отсортированный список)<br>
+                ├── PendingQueue.h           # Очередь отложенных вызовов<br>
+                ├── MetricsCalculator.h      # Класс для расчёта метрик<br>
+                ├── main.cpp                 # Демонстрация работы<br>
+                ├── CMakeLists.txt           # Файл сборки<br>
+                └── README.md                # Документация
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ОПИСАНИЕ ПРЕДМЕТНОЙ ОБЛАСТИ -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>🏢 Описание предметной области: IT-Company</h2>
+            
+            <h3>Иерархия классов</h3>
+            <div class="info-box">
+                <strong>Вершина иерархии</strong> — абстрактный класс <strong>IWorkable</strong>. Определяет интерфейс для всех работников: два чистых виртуальных метода (<code>work()</code> и <code>getEfficiency()</code>) и виртуальный деструктор.
+            </div>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h4>📌 Базовый класс Employee</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Наследует IWorkable</li>
+                        <li>Атрибуты: name, id, baseSalary</li>
+                        <li>Методы: getName(), getId(), getSalary(), displayInfo()</li>
+                        <li>Чисто виртуальные: work(), getEfficiency()</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>📌 Производные классы</h4>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Developer</strong> + язык программирования, строки кода</li>
+                        <li><strong>Manager</strong> + размер команды, количество встреч</li>
+                        <li><strong>Tester</strong> + найденные баги, инструмент тестирования</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Дополнительные классы системы</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>📦 MyContainer&lt;T&gt;</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Шаблонная коллекция</li>
+                        <li>Внутренняя структура: отсортированный связный список</li>
+                        <li>Методы: push_back, pop_back, remove, contains, clear</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>⏳ PendingQueue</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Очередь отложенных вызовов</li>
+                        <li>Методы: enqueue, run_one, run_all</li>
+                        <li>Использует вариадические шаблоны</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- РАСЧЁТ МЕТРИК ДЛЯ КАЖДОГО КЛАССА -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>📈 Расчёт метрик для каждого класса</h2>
+            
+            <h3>Класс IWorkable (интерфейс)</h3>
+            <table>
+                <thead><tr><th>Метрика</th><th>Значение</th><th>Пояснение</th></tr></thead>
+                <tbody>
+                    <tr><td>WMC</td><td>3</td><td>2 чистые виртуальные функции + виртуальный деструктор</td></tr>
+                    <tr><td>DIT</td><td>0</td><td>Корневой класс иерархии</td></tr>
+                    <tr><td>NOC</td><td>1</td><td>Employee — непосредственный наследник</td></tr>
+                    <tr><td>CBO</td><td>2</td><td>Связан с Employee и PendingQueue</td></tr>
+                    <tr><td>RFC</td><td>3</td><td>Только 3 метода могут быть вызваны</td></tr>
+                    <tr><td>LCOM</td><td>0</td><td>Нет атрибутов, несвязность нулевая</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Класс Employee</h3>
+            <table>
+                <thead><tr><th>Метрика</th><th>Значение</th><th>Пояснение</th></tr></thead>
+                <tbody>
+                    <tr><td>WMC</td><td>8</td><td>3 обычных метода + 2 чисто виртуальных + операторы + деструктор + displayInfo()</td></tr>
+                    <tr><td>DIT</td><td>1</td><td>Наследуется от IWorkable</td></tr>
+                    <tr><td>NOC</td><td>3</td><td>Developer, Manager, Tester — непосредственные наследники</td></tr>
+                    <tr><td>CBO</td><td>4</td><td>Связан с IWorkable, Developer, Manager, Tester</td></tr>
+                    <tr><td>RFC</td><td>10</td><td>8 своих методов + 2 унаследованных</td></tr>
+                    <tr><td>LCOM</td><td>0</td><td>Методы используют общие атрибуты</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Класс Developer</h3>
+            <table>
+                <thead><tr><th>Метрика</th><th>Значение</th><th>Пояснение</th></tr></thead>
+                <tbody>
+                    <tr><td>WMC</td><td>5</td><td>3 переопределения + конструктор + getProgrammingLanguage()</td></tr>
+                    <tr><td>DIT</td><td>2</td><td>IWorkable → Employee → Developer</td></tr>
+                    <tr><td>NOC</td><td>0</td><td>Нет наследников</td></tr>
+                    <tr><td>CBO</td><td>1</td><td>Связан только с Employee</td></tr>
+                    <tr><td>RFC</td><td>7</td><td>5 своих методов + 2 унаследованных</td></tr>
+                    <tr><td>LCOM</td><td>0.33</td><td>3 атрибута, методы хорошо используют общие поля</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Класс Manager</h3>
+            <table>
+                <thead><tr><th>Метрика</th><th>Значение</th><th>Пояснение</th></tr></thead>
+                <tbody>
+                    <tr><td>WMC</td><td>5</td><td>3 переопределения + конструктор + getTeamSize()</td></tr>
+                    <tr><td>DIT</td><td>2</td><td>IWorkable → Employee → Manager</td></tr>
+                    <tr><td>NOC</td><td>0</td><td>Нет наследников</td></tr>
+                    <tr><td>CBO</td><td>1</td><td>Связан только с Employee</td></tr>
+                    <tr><td>RFC</td><td>7</td><td>5 своих методов + 2 унаследованных</td></tr>
+                    <tr><td>LCOM</td><td>0.25</td><td>3 атрибута, методы хорошо используют общие поля</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Класс Tester</h3>
+            <table>
+                <thead><tr><th>Метрика</th><th>Значение</th><th>Пояснение</th></tr></thead>
+                <tbody>
+                    <tr><td>WMC</td><td>5</td><td>3 переопределения + конструктор + getBugsFoundPerDay()</td></tr>
+                    <tr><td>DIT</td><td>2</td><td>IWorkable → Employee → Tester</td></tr>
+                    <tr><td>NOC</td><td>0</td><td>Нет наследников</td></tr>
+                    <tr><td>CBO</td><td>1</td><td>Связан только с Employee</td></tr>
+                    <tr><td>RFC</td><td>7</td><td>5 своих методов + 2 унаследованных</td></tr>
+                    <tr><td>LCOM</td><td>0.25</td><td>3 атрибута, методы хорошо используют общие поля</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Класс MyContainer&lt;T&gt; (шаблонный)</h3>
+            <table>
+                <thead><tr><th>Метрика</th><th>Значение</th><th>Пояснение</th></tr></thead>
+                <tbody>
+                    <tr><td>WMC</td><td>12</td><td>Конструкторы, деструктор, push_back, pop_back, remove, contains, clear, оператор[], begin, end</td></tr>
+                    <tr><td>DIT</td><td>0</td><td>Не наследуется от других классов</td></tr>
+                    <tr><td>NOC</td><td>0</td><td>Нет наследников</td></tr>
+                    <tr><td>CBO</td><td>0</td><td>Шаблонный класс, не зависит от конкретных типов</td></tr>
+                    <tr><td>RFC</td><td>12</td><td>Все методы могут быть вызваны</td></tr>
+                    <tr><td>LCOM</td><td>0</td><td>Методы работают с внутренней структурой данных</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Класс PendingQueue</h3>
+            <table>
+                <thead><tr><th>Метрика</th><th>Значение</th><th>Пояснение</th></tr></thead>
+                <tbody>
+                    <tr><td>WMC</td><td>6</td><td>Конструктор, деструктор, enqueue, run_one, run_all, pending_count</td></tr>
+                    <tr><td>DIT</td><td>0</td><td>Наследуется от std::queue (не учитывается в DIT)</td></tr>
+                    <tr><td>NOC</td><td>0</td><td>Нет наследников</td></tr>
+                    <tr><td>CBO</td><td>3</td><td>Связан с IPending, Pending, std::queue</td></tr>
+                    <tr><td>RFC</td><td>6</td><td>Все методы могут быть вызваны</td></tr>
+                    <tr><td>LCOM</td><td>0</td><td>Методы работают с очередью</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- СИСТЕМНЫЕ МЕТРИКИ MOOD (Абреу) -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>📊 Системные метрики MOOD (Абреу)</h2>
+            
+            <div class="info-box">
+                <strong>Общие данные по системе:</strong> Total Classes (TC) = 7 (IWorkable, Employee, Developer, Manager, Tester, MyContainer, PendingQueue)
+            </div>
+
+            <h3>MIF (Method Inheritance Factor) — фактор наследования методов</h3>
+            <table>
+                <thead><tr><th>Класс</th><th>Унаследованные методы</th><th>Всего методов</th><th>Отношение</th></tr></thead>
+                <tbody>
+                    <tr><td>IWorkable</td><td>0</td><td>3</td><td>0.00</td></tr>
+                    <tr><td>Employee</td><td>2</td><td>8</td><td>0.25</td></tr>
+                    <tr><td>Developer</td><td>2</td><td>5</td><td>0.40</td></tr>
+                    <tr><td>Manager</td><td>2</td><td>5</td><td>0.40</td></tr>
+                    <tr><td>Tester</td><td>2</td><td>5</td><td>0.40</td></tr>
+                    <tr><td>MyContainer&lt;T&gt;</td><td>0</td><td>12</td><td>0.00</td></tr>
+                    <tr><td>PendingQueue</td><td>0</td><td>6</td><td>0.00</td></tr>
+                </tbody>
+            </table>
+            <p><strong>Сумма отношений = 0,00 + 0,25 + 0,40 + 0,40 + 0,40 + 0,00 + 0,00 = 1,45</strong></p>
+            <p><strong>MIF = 1,45 / 7 = 0,207 (20,7%)</strong></p>
+            <div class="warning-box">20,7% методов системы являются унаследованными — относительно низкий показатель. Можно рассмотреть вынос общей логики в базовый класс.</div>
+
+            <h3>AHF (Attribute Inheritance Factor) — фактор наследования атрибутов</h3>
+            <table>
+                <thead><tr><th>Класс</th><th>Унаследованные атрибуты</th><th>Всего атрибутов</th><th>Отношение</th></tr></thead>
+                <tbody>
+                    <tr><td>IWorkable</td><td>0</td><td>0</td><td>0.00</td></tr>
+                    <tr><td>Employee</td><td>0</td><td>3</td><td>0.00</td></tr>
+                    <tr><td>Developer</td><td>3</td><td>5</td><td>0.60</td></tr>
+                    <tr><td>Manager</td><td>3</td><td>5</td><td>0.60</td></tr>
+                    <tr><td>Tester</td><td>3</td><td>5</td><td>0.60</td></tr>
+                    <tr><td>MyContainer&lt;T&gt;</td><td>0</td><td>3</td><td>0.00</td></tr>
+                    <tr><td>PendingQueue</td><td>0</td><td>0</td><td>0.00</td></tr>
+                </tbody>
+            </table>
+            <p><strong>Сумма отношений = 0,00 + 0,00 + 0,60 + 0,60 + 0,60 + 0,00 + 0,00 = 1,80</strong></p>
+            <p><strong>AHF = 1,80 / 7 = 0,257 (25,7%)</strong></p>
+            <div class="info-box">25,7% атрибутов наследуются — хороший показатель переиспользования.</div>
+
+            <h3>POF (Polymorphism Factor) — фактор полиморфизма</h3>
+            <table>
+                <thead><tr><th>Класс</th><th>Переопределённые методы</th><th>Всего методов</th><th>Отношение</th></tr></thead>
+                <tbody>
+                    <tr><td>IWorkable</td><td>0</td><td>3</td><td>0.00</td></tr>
+                    <tr><td>Employee</td><td>0</td><td>8</td><td>0.00</td></tr>
+                    <tr><td>Developer</td><td>2</td><td>5</td><td>0.40</td></tr>
+                    <tr><td>Manager</td><td>2</td><td>5</td><td>0.40</td></tr>
+                    <tr><td>Tester</td><td>2</td><td>5</td><td>0.40</td></tr>
+                    <tr><td>MyContainer&lt;T&gt;</td><td>0</td><td>12</td><td>0.00</td></tr>
+                    <tr><td>PendingQueue</td><td>0</td><td>6</td><td>0.00</td></tr>
+                </tbody>
+            </table>
+            <p><strong>Сумма отношений = 0,00 + 0,00 + 0,40 + 0,40 + 0,40 + 0,00 + 0,00 = 1,20</strong></p>
+            <p><strong>POF = 1,20 / 7 = 0,171 (17,1%)</strong></p>
+            <div class="info-box">17,1% методов переопределены — хороший показатель активного использования полиморфизма.</div>
+
+            <h3>COF (Coupling Factor) — фактор сцепления</h3>
+            <p><strong>Количество реальных связей между классами:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>IWorkable — Employee (наследование)</li>
+                <li>Employee — Developer (наследование)</li>
+                <li>Employee — Manager (наследование)</li>
+                <li>Employee — Tester (наследование)</li>
+                <li>PendingQueue — IPending (использование)</li>
+                <li>IPending — Pending (наследование)</li>
+            </ul>
+            <p><strong>Количество реальных связей = 6</strong></p>
+            <p><strong>Количество возможных связей = (7 × 6) / 2 = 21</strong></p>
+            <p><strong>COF = 6 / 21 = 0,286 (28,6%)</strong></p>
+            <div class="success-box">28,6% возможных связей реализованы — умеренное сцепление, хорошая модульность.</div>
+
+            <h3>MHF (Method Hiding Factor) — фактор сокрытия методов</h3>
+            <p><strong>Общее число методов = 44</strong></p>
+            <p><strong>Число закрытых (private) методов = 6 (по 2 в Developer, Manager, Tester)</strong></p>
+            <p><strong>MHF = 6 / 44 = 0,136 (13,6%)</strong></p>
+            <div class="warning-box">Низкий уровень сокрытия методов. Рекомендуется больше использовать private методы для инкапсуляции.</div>
+
+            <h3>CHF (Class Hiding Factor) — фактор сокрытия атрибутов</h3>
+            <p><strong>Общее число атрибутов = 21</strong></p>
+            <p><strong>Число закрытых (private) атрибутов = 21 (все атрибуты объявлены как protected или private)</strong></p>
+            <p><strong>CHF = 21 / 21 = 1,0 (100%)</strong></p>
+            <div class="success-box">100% атрибутов скрыты — отличная инкапсуляция данных.</div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- СВОДНАЯ ТАБЛИЦА МЕТРИК -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>📋 Сводная таблица метрик</h2>
+            
+            <table>
+                <thead>
+                    <tr><th>Метрика</th><th>Класс метрик</th><th>Что измеряет</th><th>Значение</th><th>Оценка</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>WMC (среднее)</td><td>CK</td><td>Сложность класса</td><td>6.3</td><td class="good">✓ Отлично (&lt;20)</td></tr>
+                    <tr><td>DIT (макс.)</td><td>CK, Lorenz</td><td>Глубина наследования</td><td>2</td><td class="good">✓ Оптимально (2-4)</td></tr>
+                    <tr><td>NOC (среднее)</td><td>CK, Lorenz</td><td>Ширина наследования</td><td>0.7</td><td class="good">✓ Нормально (0-10)</td></tr>
+                    <tr><td>CBO (среднее)</td><td>CK, Lorenz</td><td>Сцепление</td><td>1.7</td><td class="good">✓ Отлично (&lt;10)</td></tr>
+                    <tr><td>RFC (среднее)</td><td>CK, Lorenz</td><td>Ответ на сообщение</td><td>7.4</td><td class="good">✓ Отлично (&lt;30)</td></tr>
+                    <tr><td>LCOM (среднее)</td><td>CK</td><td>Связность</td><td>0.14</td><td class="good">✓ Хорошо (0-1)</td></tr>
+                    <tr><td>MIF</td><td>Abreu</td><td>Наследование методов</td><td>0.207</td><td class="warning">⚠️ Низкий (&lt;0.3)</td></tr>
+                    <tr><td>AHF</td><td>Abreu</td><td>Наследование атрибутов</td><td>0.257</td><td class="good">✓ Нормально</td></tr>
+                    <tr><td>POF</td><td>Abreu</td><td>Полиморфизм</td><td>0.171</td><td class="good">✓ Оптимально (0.1-0.3)</td></tr>
+                    <tr><td>COF</td><td>Abreu</td><td>Сцепление системы</td><td>0.286</td><td class="good">✓ Хорошо (&lt;0.3)</td></tr>
+                    <tr><td>MHF</td><td>Abreu</td><td>Сокрытие методов</td><td>0.136</td><td class="warning">⚠️ Низкий</td></tr>
+                    <tr><td>CHF</td><td>Abreu</td><td>Сокрытие атрибутов</td><td>1.0</td><td class="good">✓ Отлично</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- АНАЛИЗ И РЕКОМЕНДАЦИИ -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>🔍 Анализ и рекомендации</h2>
+            
+            <h3>📊 Полученные значения</h3>
+            <ul style="margin-left: 20px;">
+                <li><strong>DIT (глубина наследования):</strong> 2 — отлично, все классы находятся на небольшой глубине, легко понимать и модифицировать</li>
+                <li><strong>WMC (сложность каждого класса):</strong> 5-12 — отлично, классы простые, легко тестировать</li>
+                <li><strong>LCOM (связность):</strong> 0-0.33 — хорошо, методы используют общие атрибуты</li>
+                <li><strong>CBO (сцепление):</strong> 0-4 — отлично, классы слабо связаны между собой</li>
+                <li><strong>RFC:</strong> 3-12 — отлично, мало методов, доступных для вызова</li>
+            </ul>
+
+            <h3>⚠️ Возможные улучшения</h3>
+            <table>
+                <thead><tr><th>Метрика</th><th>Значение</th><th>Недостаток</th><th>Рекомендация</th></tr></thead>
+                <tbody>
+                    <tr><td>MIF</td><td>0.207</td><td>Относительно низкий</td><td>Можно рассмотреть вынос общей логики в базовый класс</td></tr>
+                    <tr><td>MHF</td><td>0.136</td><td>Низкое сокрытие методов</td><td>Использовать больше private методов для инкапсуляции</td></tr>
+                    <tr><td>POF</td><td>0.171</td><td>Достаточный</td><td>Хорошая гибкость, изменений не требуется</td></tr>
+                </tbody>
+            </table>
+
+            <h3>💡 Рекомендации по рефакторингу</h3>
+            <ol style="margin-left: 20px;">
+                <li><strong>Вынести общую логику в базовый класс Employee:</strong> Методы work() и getEfficiency() переопределяются в каждом наследнике одинаково. Можно сделать их чисто виртуальными, но добавить общую логику.</li>
+                <li><strong>Увеличить сокрытие методов:</strong> Некоторые вспомогательные методы можно сделать private вместо public.</li>
+                <li><strong>Текущая архитектура достаточно хороша</strong> для системы такого размера; радикальный рефакторинг не требуется.</li>
+            </ol>
+
+            <h3>📈 Сравнение с эталонными значениями</h3>
+            <table>
+                <thead><tr><th>Метрика</th><th>Рекомендуемое значение</th><th>Полученное значение</th><th>Соответствие</th></tr></thead>
+                <tbody>
+                    <tr><td>DIT (макс.)</td><td>≤ 5</td><td>2</td><td class="good">✓ Соответствует</td></tr>
+                    <tr><td>CBO (на класс)</td><td>≤ 12-15</td><td>1-4</td><td class="good">✓ Соответствует</td></tr>
+                    <tr><td>RFC (на класс)</td><td>≤ 50</td><td>3-12</td><td class="good">✓ Соответствует</td></tr>
+                    <tr><td>WMC (на класс)</td><td>≤ 20-30</td><td>5-12</td><td class="good">✓ Соответствует</td></tr>
+                    <tr><td>LCOM</td><td>0-1</td><td>0-0.33</td><td class="good">✓ Соответствует</tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ВЫВОДЫ -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>📝 Выводы</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h4>✅ Достоинства архитектуры</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Низкая глубина наследования (DIT=2)</li>
+                        <li>Малая сложность классов (WMC=5-12)</li>
+                        <li>Отличная инкапсуляция атрибутов (CHF=100%)</li>
+                        <li>Слабая связанность классов (CBO=1-4)</li>
+                        <li>Хорошая связность методов (LCOM&lt;1)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>⚠️ Недостатки и точки роста</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Низкий фактор наследования методов (MIF=20.7%)</li>
+                        <li>Недостаточное сокрытие методов (MHF=13.6%)</li>
+                        <li>Возможно дублирование кода в наследниках</li>
+                        <li>Можно вынести общую логику в базовый класс</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="success-box" style="margin-top: 20px;">
+                <strong>🏆 Итоговая оценка качества архитектуры:</strong><br>
+                Архитектура системы IT-Company признаётся <strong>хорошей</strong>. Основные метрики (WMC, DIT, NOC, CBO, RFC, LCOM) находятся в пределах рекомендуемых значений. 
+                Система имеет низкую связанность, хорошую инкапсуляцию данных и умеренное использование полиморфизма. 
+                Рекомендуется незначительно повысить фактор наследования методов (MIF) и сокрытие методов (MHF), 
+                что можно достичь вынесением общей логики в базовый класс и сокрытием вспомогательных методов.
+            </div>
+
+            <div class="info-box" style="margin-top: 20px;">
+                <strong>📖 Что даёт анализ метрик:</strong><br>
+                • Обнаружение потенциальных проблем на ранних этапах разработки<br>
+                • Сравнение различных вариантов проектирования<br>
+                • Отслеживание ухудшения качества кода со временем<br>
+                • Обоснованное принятие решений о рефакторинге
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Семинар 7-8: Расчёт метрик ООП | IT-Company | Метрики Чидамбера-Кемерера (CK) | Метрики Абреу (MOOD)</p>
+        <p>WMC | DIT | NOC | CBO | RFC | LCOM | MIF | AHF | POF | COF | MHF | CHF</p>
+    </div>
+</div>
+</body>
+</html>
